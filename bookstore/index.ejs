@@ -1,0 +1,80 @@
+<%- include('partials/header') %>
+
+<div class="page-header">
+    <div class="page-header-text">
+        <h1>Your Library</h1>
+        <p>Managing <strong><%= totalBooks %></strong> books across your collection</p>
+    </div>
+</div>
+
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-collection"></i></div>
+        <div class="stat-info">
+            <span class="stat-num"><%= totalBooks %></span>
+            <span class="stat-label">Total Books</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-boxes"></i></div>
+        <div class="stat-info">
+            <span class="stat-num"><%= totalStock %></span>
+            <span class="stat-label">Total Stock</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon"><i class="bi bi-tag"></i></div>
+        <div class="stat-info">
+            <span class="stat-num"><%= categories %></span>
+            <span class="stat-label">Categories</span>
+        </div>
+    </div>
+</div>
+
+<% if (books.length === 0) { %>
+    <div class="empty-state">
+        <i class="bi bi-journal-x"></i>
+        <h3>No books yet</h3>
+        <p>Start building your collection</p>
+        <a href="/add" class="btn-add">+ Add First Book</a>
+    </div>
+<% } else { %>
+    <div class="books-grid">
+        <% books.forEach(book => { %>
+        <div class="book-card">
+            <div class="book-cover">
+                <% if (book.image) { %>
+                    <img src="/uploads/<%= book.image %>" alt="<%= book.title %>" />
+                <% } else { %>
+                    <div class="cover-placeholder">
+                        <i class="bi bi-book"></i>
+                    </div>
+                <% } %>
+                <div class="book-overlay">
+                    <a href="/edit/<%= book._id %>" class="overlay-btn edit-btn" title="Edit">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    <form action="/delete/<%= book._id %>?_method=DELETE" method="POST" class="delete-form">
+                        <button type="submit" class="overlay-btn delete-btn" title="Delete" onclick="return confirm('Delete \'<%= book.title %>\'?')">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="book-info">
+                <span class="book-category"><%= book.category %></span>
+                <h3 class="book-title"><%= book.title %></h3>
+                <p class="book-author">by <%= book.author %></p>
+                <div class="book-meta">
+                    <span class="book-price">₹<%= book.price.toFixed(2) %></span>
+                    <span class="book-qty">
+                        <i class="bi bi-stack"></i> <%= book.quantity %>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+<% } %>
+
+<%- include('partials/footer') %>
